@@ -1,4 +1,4 @@
-import random,time,re,os,sys,time
+import random,time,re,os,sys
 pics =[ r"""
    +---+
    |   |
