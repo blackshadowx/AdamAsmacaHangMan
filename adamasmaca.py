@@ -81,7 +81,7 @@ class Oyuncu(object):
 		self.ekranı_temizle()
 		time.sleep(0.5)
 		print("{}, adam asmaca oyununa hoşgeldin".format(self.isim.title()))
-		print("1","sesli hakkın var\nKelimeyi tahmin etmek istediğinde harf bölümüne tahmin yaz")
+		print("1","sesli hakkın var\nKelimeyi tahmin etmek istediğinde harf bölümüne 'tahmin' yaz\nYenilemek istediğinde ise 'yenile' yaz")
 		time.sleep(1)
 		input("Başla?")
 	def __init__(self,isim):
@@ -131,8 +131,10 @@ self.tahmin_tablosu[len(self.tahminler)]))
 	def tahmin_yap(self):
 		while self.devam_durumu:
 			self.tahmin = tahmin = input("Harf?\n").upper()
-			if len(tahmin) != 1 and tahmin.lower()!="tahmin":
+			if len(tahmin) != 1 and tahmin.lower()!="tahmin" and tahmin.lower()!="yenile":
 				print("Lütfen sadece bir karakter giriniz..")
+			elif len(tahmin) != 1 and tahmin.lower()=="yenile":
+				self.__init__(self.isim_al())
 			elif len(tahmin) != 1 and tahmin.lower()=="tahmin":
 				self.kelime_tahmin_et()
 			elif tahmin in self.haklar:
