@@ -1,3 +1,6 @@
+# Yazar: Siyabend Ürün
+# Okuduğu Okul: Beşiktaş Atatürk Anadolu Lisesi
+# E-posta: urunsiyabend@gmail.com
 import random,time,re,os,sys
 pics =[ r"""
    +---+
@@ -42,6 +45,7 @@ pics =[ r"""
   / \  |
        |
 ========="""]
+#Sözlüğe isterseniz yeni maddeler ekleyebilirsiniz
 kelimeler={
 "İşletim Sistemleri":[
 "KALI LINUX","UBUNTU","WINDOWS","BACKTRACK","MAC OS"
@@ -72,8 +76,9 @@ class Oyuncu(object):
 		print("{}, adam asmaca oyununa hoşgeldin".format(self.isim.title()))
 		print("1","sesli hakkın var\nKelimeyi tahmin etmek istediğinde harf bölümüne tahmin yaz")
 		time.sleep(1)
-		input("Başla?")
+		input("Başla?") #Geçmek için kullanıcı onayını bekledim
 	def __init__(self,isim):
+		#Oyuncu sınıfının tüm özelliklerini belirledim
 		self.sesli_hakkı=True
 		self.kazandı=None
 		self.haklar = []
@@ -96,14 +101,20 @@ class Oyuncu(object):
 	def rastgele_kelime_bul(self):
 		_anahtar=random.choice(list(kelimeler.keys()))
 		_numara = random.randrange(0, len(kelimeler[_anahtar]))
+		#Burda yaptığım işlem oyun boyunca aynı kelimenün kullanılması için.
+		#Direk değeri döndürürsem kelime oyun boyunca değişecek
 		self.gizli_kelime = kelimeler[_anahtar][_numara]
 		self.gizli_anahtar = _anahtar
 		return self.gizli_kelime
 		return self.gizli_anahtar
 	def cizgili_kelime(self):
+		#"replace /" yapmamın sebebi:
+		#YUZUKLERIN EFENDISI adında bir nesneyi _ _ _ _ _ _ _ _ _ _ / _ _ _ _ _ _ _ _
+		#olarak çevirmesini istemem
 		self.çizgili_kelime = re.compile("[ABCÇDEFGĞHIIJKLMNOÖPRSŞTUÜVYZXWQ]",re.I).sub("_",self.gizli_kelime.replace(" ","/"))
 		return self.çizgili_kelime
 	def son_yazı(self):
+		#Gereksiz bulmuş olabilirsiniz ama bu kodları 2 yerde kullandığım için fonksiyon altına toplama gereği duydum
 		time.sleep(0.4)
 		self.ekranı_temizle()
 		print("""Kelime '{}' idi. Oyunu kazandınız!
@@ -119,6 +130,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 ))
 	def tahmin_yap(self):
 		while self.devam_durumu:
+			#Sadece harf girilmesini özellikle vurguladım
 			self.tahmin = tahmin = input("Harf?\n").upper()
 			if len(tahmin) != 1 and tahmin.lower()!="tahmin":
 				print("Lütfen sadece bir karakter giriniz..")
@@ -131,6 +143,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 			elif tahmin in self.sesli_harfler and not self.sesli_hakkı:
 				print("Sesli harf hakkınız yoktur..")
 			elif tahmin in self.sesli_harfler and self.sesli_hakkı:
+				#Eğer sesli harf hakkı varsa bunu harcamasını istedim.
 				self.sesli_hakkı=False
 				return self.tahmin
 			else:
@@ -144,6 +157,8 @@ self.tahmin_tablosu[len(self.tahminler)]
 				self.devam_durumu=devam_soru.startswith("e")
 				if self.devam_durumu:
 					self.__init__(self.isim_al())
+					# Tekrar oynama isteği durumunda self.__init__() fonksiyonunu çağırarak
+					# Oyunun tüm özelliklerini varsayılana döndürdüm
 				break
 	def kelime_tahmin_et(self):
 		kelime_tahmini=input("Kelimeyi tahmin et:\n")
@@ -157,6 +172,8 @@ self.tahmin_tablosu[len(self.tahminler)]
 		try:
 			self.tahmin_tablosu[len(self.tahminler)]
 		except KeyError:
+			#Tahmin tablosunda belirttiğim 6 seçenekten daha fazla tahmin yapılırsa
+			#Kaybetme yazısını basmasını istedim.
 			time.sleep(0.4)
 			self.ekranı_temizle()
 			print("Kelime {} idi".format(self.gizli_kelime))
@@ -167,6 +184,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 		self.ekranı_temizle()
 		print("Kategori:\t{}".format(self.gizli_anahtar.title()))
 		if len(self.haklar)==len(pics):
+			#6 hak harcanırsa kaybettiniz yazısını basmasını istedim
 			time.sleep(0.4)
 			self.ekranı_temizle()
 			print("Kelime {} idi".format(self.gizli_kelime))
@@ -174,6 +192,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 			self.bitti=True
 			self.tekrar()
 		else:
+			#Kullanılan hak listesinin uzunluğu kadar Resim basmasını istedim
 			print(pics[len(self.haklar)],"\n")
 			if self.haklar:
 				print("Kullanılan harfler:"),
@@ -181,6 +200,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 			for i in range(len(self.gizli_kelime)):
 				if self.gizli_kelime[i] in self.doğru_harfler:
 					self.çizgili_kelime = self.çizgili_kelime[:i] + self.gizli_kelime[i] + self.çizgili_kelime[i + 1:]
+			#Çizgili olan kelimeyi bastırdım
 			print(*self.çizgili_kelime,sep=" ")
 	def oyun(self):
 		while self.devam_durumu:
@@ -199,6 +219,7 @@ self.tahmin_tablosu[len(self.tahminler)]
 						self.son_yazı()
 						self.bitti=True
 				else:
+					#Eğer kelimede yoksa haklar listesinin içine eklemesini istedim.
 					self.haklar.append(oyun_tahmin)
 				if self.bitti:
 					while True:
@@ -206,9 +227,11 @@ self.tahmin_tablosu[len(self.tahminler)]
 				if not self.devam_durumu:
 					break
 			except TypeError:
+				#Oyun bittiğinde verilen hatanın oyunu çöktürmemesi amacıyla bitti durumunu değiştirdim
 				self.bitti=True
 	@staticmethod
 	def ekranı_temizle():
+		#Kullanılan işletim sisteminin terminaline göre temizleme seçeneği yapılacak.
 		try:
 			if os.name=="nt":
 				return os.system("cls")
