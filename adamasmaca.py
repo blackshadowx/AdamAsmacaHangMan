@@ -121,9 +121,7 @@ class Oyuncu(object):
 Kalan haklar:\t{}
 {}
 Yanlış Tahmin Sayısı:\t{}
-{}
-Kullanılmış Kelimeler\n{}
-""".format(self.gizli_kelime,
+{}""".format(self.gizli_kelime,
 len(pics)-len(self.haklar),
 self.başarı_tablosu[len(pics)-len(self.haklar)],
 len(self.tahminler),
